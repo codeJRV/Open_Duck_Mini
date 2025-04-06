@@ -9,8 +9,10 @@ from sb3_contrib import TQC
 from stable_baselines3 import A2C, PPO, SAC, TD3
 from stable_baselines3.common.noise import NormalActionNoise
 
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device="cuda"):
+
+def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device=device):
     n_actions = env.action_space.shape[-1]
     # SAC parameters found here https://github.com/hill-a/stable-baselines/issues/840#issuecomment-623171534
     if pretrained is None:
@@ -58,7 +60,7 @@ def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device="cuda"):
                     pretrained,
                     env=env,
                     verbose=1,
-                    device="cuda",
+                    device=device,
                     tensorboard_log=log_dir,
                 )
             case "TD3":
@@ -66,7 +68,7 @@ def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device="cuda"):
                     pretrained,
                     env=env,
                     verbose=1,
-                    device="cuda",
+                    device=device,
                     tensorboard_log=log_dir,
                 )
             case "A2C":
@@ -74,7 +76,7 @@ def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device="cuda"):
                     pretrained,
                     env=env,
                     verbose=1,
-                    device="cuda",
+                    device=device,
                     tensorboard_log=log_dir,
                 )
             case "TQC":
@@ -82,7 +84,7 @@ def train(env, sb3_algo, model_dir, log_dir, pretrained=None, device="cuda"):
                     pretrained,
                     env=env,
                     verbose=1,
-                    device="cuda",
+                    device=device,
                     tensorboard_log=log_dir,
                 )
             case _:
@@ -113,7 +115,7 @@ if __name__ == "__main__":
         default="SAC",
     )
     parser.add_argument("-p", "--pretrained", type=str, required=False)
-    parser.add_argument("-d", "--device", type=str, required=False, default="cuda")
+    parser.add_argument("-d", "--device", type=str, required=False, default=DEVICE)
 
     parser.add_argument(
         "-n",
